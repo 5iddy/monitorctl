@@ -1,5 +1,4 @@
 use ddc::Ddc;
-use ddc::VcpValue;
 use ddc_i2c::I2cDeviceDdc;
 
 pub enum Features {
@@ -19,10 +18,7 @@ impl From<Features> for u8 {
 }
 
 pub struct Monitor {
-    handle: I2cDeviceDdc,
-    brightness: Option<VcpValue>,
-    contrast: Option<VcpValue>,
-    volume: Option<VcpValue>,
+    handle: I2cDeviceDdc
 }
 
 impl Monitor {
@@ -42,37 +38,9 @@ impl Monitor {
 }
 
 impl From<I2cDeviceDdc> for Monitor {
-    fn from(mut handle: I2cDeviceDdc) -> Self {
-        let brightness = match handle.get_vcp_feature(Features::Brightness.into()) {
-            Ok(res) => Some(res),
-            Err(_) => None,
-        };
-
-        let contrast = match handle.get_vcp_feature(Features::Contrast.into()) {
-            Ok(res) => Some(res),
-            Err(_) => None,
-        };
-
-        let volume = match handle.get_vcp_feature(Features::Volume.into()) {
-            Ok(res) => Some(res),
-            Err(_) => None,
-        };
-
+    fn from(handle: I2cDeviceDdc) -> Self {
         Self {
-            handle,
-            brightness,
-            contrast,
-            volume,
+            handle
         }
     }
 }
-
-// #[cfg(test)]
-// mod tests {
-//     use super::Monitor;
-
-//     #[test]
-//     fn test_get_brightness() {
-
-//     }
-// }

@@ -80,8 +80,7 @@ impl Cli {
                         .exit();
                     }
                 };
-                // set_brightness(monitor, brightness);
-                s.spawn(move || monitor.set_brightness(Some(args.value)));
+                s.spawn(move || monitor.set_brightness(Some(brightness)));
             }
         });
     }
