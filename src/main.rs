@@ -5,4 +5,4 @@ use cli::Cli;
 
 fn main() {
     Cli::execute();
-}  
+}

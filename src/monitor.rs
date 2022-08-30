@@ -18,7 +18,7 @@ impl From<Features> for u8 {
 }
 
 pub struct Monitor {
-    handle: I2cDeviceDdc
+    handle: I2cDeviceDdc,
 }
 
 impl Monitor {
@@ -39,8 +39,6 @@ impl Monitor {
 
 impl From<I2cDeviceDdc> for Monitor {
     fn from(handle: I2cDeviceDdc) -> Self {
-        Self {
-            handle
-        }
+        Self { handle }
     }
 }
