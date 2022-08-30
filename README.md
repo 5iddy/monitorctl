@@ -6,7 +6,8 @@ A way to control monitor brightness through the command line. You can change the
 - [X] Add multi-threading for perfomance boost
 - [X] Use the `ddc-i2c` crate for perfomance improvement
 - [X] Add/Subtract from the current value using `-a` and `-s` flags
-- [X] 
+- [] Change Contrast of all monitors
+- [] Change Volume of all monitors 
 
 ## Installation
 Install the dependencies first and then build and install the binary into PATH.
