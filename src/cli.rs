@@ -1,87 +1,49 @@
 // use crate::brightness::{detect_brightness, detect_monitors, set_brightness};
-use crate::monitor::Monitor;
-use clap::{CommandFactory, ErrorKind, Parser};
-use ddc_i2c::I2cDeviceEnumerator;
-use std::thread;
+use clap::{ArgAction, Args, Parser, Subcommand};
 
-#[derive(Parser, Debug)]
-#[clap(author, version)]
-#[clap(about = "")]
+/// A command line tool to control monitor settings
+/// Examples:
+///     monitorctl b 100
+///     monitorctl b -i 10
+///     monitorctl b -d 10
+#[derive(Debug, Parser)]
+#[clap(author, version, verbatim_doc_comment)]
 #[clap(propagate_version = true)]
 pub struct Cli {
-    #[clap(value_parser, value_name = "Value")]
+    #[clap(subcommand)]
+    pub command: SubCommands,
+}
+
+#[derive(Debug, Subcommand, Clone)]
+pub enum SubCommands {
+    /// Change Brightness
+    #[clap(visible_alias = "b")]
+    Brightness(SubCmdArgs),
+    /// Change Contrast
+    #[clap(visible_alias = "c")]
+    Contrast(SubCmdArgs),
+    /// Change Volume
+    #[clap(visible_alias = "v")]
+    Volume(SubCmdArgs),
+    /// Debug Information
+    Debug,
+}
+
+#[derive(Debug, Args, Clone)]
+pub struct SubCmdArgs {
+    /// Get current value
+    #[clap(short, long, action=ArgAction::SetTrue, conflicts_with_all=["decrease", "increase"])]
+    pub get_current_value: bool,
+
+    /// Value needed if '-i'/'--increase' or '-d'/'--decrease' flag is not used
+    #[clap(value_parser, value_name = "Value", default_value="5", required_unless_present_any=["get_current_value", "increase", "decrease"])]
     pub value: u8,
 
     /// Adds the value to the current value
-    #[clap(short = 'a', long = "add", action)]
-    pub add: bool,
+    #[clap(short = 'i', long = "increase", action=ArgAction::SetTrue, conflicts_with_all=["decrease", "get_current_value"])]
+    pub increase: bool,
 
     /// Subs the value from the current value
-    #[clap(short = 's', long = "sub", action)]
-    pub sub: bool,
-
-    /// Subs the value from the current value
-    #[clap(short = 'b', long = "brightness", action)]
-    pub brightness: bool,
-
-    /// Subs the value from the current value
-    #[clap(short = 'c', long = "contrast", action)]
-    pub contrast: bool,
-
-    /// Subs the value from the current value
-    #[clap(short = 'v', long = "volume", action)]
-    pub volume: bool,
-}
-
-impl Cli {
-    pub fn execute() {
-        let args = Cli::parse();
-        // let monitors = detect_monitors();
-        let monitors: Vec<Monitor> = I2cDeviceEnumerator::new()
-            .unwrap()
-            .map(|monitor| Monitor::from(monitor))
-            .collect();
-        thread::scope(|s| {
-            for mut monitor in monitors {
-                let (current_value, max_value) = monitor
-                    .get_brightness()
-                    .expect("Unable to get the current brightness values");
-                let value = args.value;
-                let brightness = match (args.add, args.sub) {
-                    (true, false) => {
-                        if value > (max_value - current_value) {
-                            max_value
-                        } else {
-                            current_value + value
-                        }
-                    }
-                    (false, true) => {
-                        if value > current_value {
-                            0u8
-                        } else {
-                            current_value - value
-                        }
-                    }
-                    (false, false) => {
-                        if value >= 100 {
-                            100u8
-                        } else if value == 0 {
-                            0u8
-                        } else {
-                            value
-                        }
-                    }
-                    (true, true) => {
-                        let mut cmd = Cli::command();
-                        cmd.error(
-                            ErrorKind::ArgumentConflict,
-                            "cannot use both --add and --sub together",
-                        )
-                        .exit();
-                    }
-                };
-                s.spawn(move || monitor.set_brightness(Some(brightness)));
-            }
-        });
-    }
+    #[clap(short = 'd', long = "decrease", action=ArgAction::SetTrue, conflicts_with_all=["increase", "get_current_value"])]
+    pub decrease: bool,
 }
