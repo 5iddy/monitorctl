@@ -5,9 +5,10 @@ A way to control monitor brightness through the command line. You can change the
 - [X] Change brightness of all monitors 
 - [X] Add multi-threading for perfomance boost
 - [X] Use the `ddc-i2c` crate for perfomance improvement
-- [X] Add/Subtract from the current value using `-a` and `-s` flags
-- [ ] Change Contrast of all monitors
-- [ ] Change Volume of all monitors 
+- [X] Increase/Decrease from the current value using `-i` and `-d` flags
+- [X] Change Contrast of all monitors
+- [X] Change Volume of all monitors
+- [ ] Add the ability to change the brightness of a laptop screen.
 
 ## Installation
 Install the dependencies first and then build and install the binary into PATH.
@@ -37,19 +38,82 @@ Add `export PATH=$PATH:$HOME/.cargo/bin` to `~/.bash_profile` or `~/.zprofile`
 
 ## Usage
 ```
-USAGE:
-    monitorctl [OPTIONS] <Value>
+A command line tool to control monitor settings.
+You can Increase/Decrease/Get/Set all connected monitors'
+brightness, contrast, volume simultaneously.
+Examples:
+    monitorctl b 100   # set brightness to 100
+    monitorctl b -i 10 # increase brightness by 10 points
+    monitorctl b -d 10 # decrease brightness by 10 points
+    monitorctl b -g    # get current brightness
+    monitorctl c 100
+    monitorctl c -i 10
+    monitorctl c -d 10
+    monitorctl c -g
+    monitorctl v 100
+    monitorctl v -i 10
+    monitorctl v -d 10
+    monitorctl v -g
 
-ARGS:
-    <Value>    
+Usage: monitorctl <COMMAND>
 
-OPTIONS:
-    -a, --add           Adds the value to the current value
-    -h, --help          Print help information
-    -s, --sub           Subs the value from the current value
-    -V, --version       Print version information
+Commands:
+  brightness  Change Brightness [aliases: b]
+  contrast    Change Contrast [aliases: c]
+  volume      Change Volume [aliases: v]
+  debug       Debug Information
+  help        Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help     Print help
 ```
-### Examples:
-1. `monitorctl 10` set brightness of all monitors to 10
-2. `monitorctl -a 10` set brightness of all monitors to current value + 10
-3. `monitorctl -s 10` set brightness of all monitors to current value - 10
+### brightness help
+```
+Change Brightness
+
+Usage: monitorctl brightness [OPTIONS] [Value]
+
+Arguments:
+  [Value]  Value needed if '-i'/'--increase' or '-d'/'--decrease' flag is not used [default: 5]
+
+Options:
+  -g, --get-current-value  Get current value
+  -i, --increase           Adds the value to the current value
+  -d, --decrease           Subs the value from the current value
+  -h, --help               Print help
+  -V, --version            Print version
+```
+### Contrast help
+```
+Change Contrast
+
+Usage: monitorctl contrast [OPTIONS] [Value]
+
+Arguments:
+  [Value]  Value needed if '-i'/'--increase' or '-d'/'--decrease' flag is not used [default: 5]
+
+Options:
+  -g, --get-current-value  Get current value
+  -i, --increase           Adds the value to the current value
+  -d, --decrease           Subs the value from the current value
+  -h, --help               Print help
+  -V, --version            Print version
+```
+### Volume help
+```
+Change Volume
+
+Usage: monitorctl volume [OPTIONS] [Value]
+
+Arguments:
+  [Value]  Value needed if '-i'/'--increase' or '-d'/'--decrease' flag is not used [default: 5]
+
+Options:
+  -g, --get-current-value  Get current value
+  -i, --increase           Adds the value to the current value
+  -d, --decrease           Subs the value from the current value
+  -h, --help               Print help
+  -V, --version            Print version
+```
+
+Note: Volume sub command doesnt change pulseaudio or local volume, it changes the volume of the inbuilt monitor speaker which would have been otherwise set in panel menu.

@@ -1,11 +1,22 @@
 // use crate::brightness::{detect_brightness, detect_monitors, set_brightness};
 use clap::{ArgAction, Args, Parser, Subcommand};
 
-/// A command line tool to control monitor settings
+/// A command line tool to control monitor settings.
+/// You can Increase/Decrease/Get/Set all connected monitors'
+/// brightness, contrast, volume simultaneously.
 /// Examples:
-///     monitorctl b 100
-///     monitorctl b -i 10
-///     monitorctl b -d 10
+///     monitorctl b 100   # set brightness to 100
+///     monitorctl b -i 10 # increase brightness by 10 points
+///     monitorctl b -d 10 # decrease brightness by 10 points
+///     monitorctl b -g    # get current brightness
+///     monitorctl c 100
+///     monitorctl c -i 10
+///     monitorctl c -d 10
+///     monitorctl c -g
+///     monitorctl v 100
+///     monitorctl v -i 10
+///     monitorctl v -d 10
+///     monitorctl v -g
 #[derive(Debug, Parser)]
 #[clap(author, version, verbatim_doc_comment)]
 #[clap(propagate_version = true)]
