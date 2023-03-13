@@ -9,26 +9,38 @@ use std::thread;
 
 fn main() {
     let cli = Cli::parse();
-    let monitors: Vec<Monitor> = I2cDeviceEnumerator::new()
-        .unwrap()
-        .map(|monitor| Monitor::from(monitor))
-        .collect();
-
-    println!("monitors: {}", monitors.len());
 
     thread::scope(move |s| {
+        let monitors: Vec<Monitor> = I2cDeviceEnumerator::new()
+            .unwrap()
+            .map(Monitor::from)
+            .collect();
         let cmd = cli.command;
-        for mut monitor in monitors {
-            let cmd = cmd.clone();
-            s.spawn(move || match cmd {
-                SubCommands::Brightness(args) => monitor.handle_brightness(args),
-                SubCommands::Contrast(args) => monitor.handle_contrast(args),
-                SubCommands::Volume(args) => monitor.handle_volume(args),
-                SubCommands::Debug => {
-                    println!("args={cmd:#?}");
-                    monitor.capabilities()
+        match cmd {
+            SubCommands::Brightness(args) => {
+                for mut monitor in monitors {
+                    let args = args.clone();
+                    s.spawn(move || monitor.handle_brightness(args));
                 }
-            });
+            }
+            SubCommands::Contrast(args) => {
+                for mut monitor in monitors {
+                    let args = args.clone();
+                    s.spawn(move || monitor.handle_contrast(args));
+                }
+            }
+            SubCommands::Volume(args) => {
+                for mut monitor in monitors {
+                    let args = args.clone();
+                    s.spawn(move || monitor.handle_volume(args));
+                }
+            }
+            SubCommands::Debug => {
+                // println!("cmd={cmd:#?}");
+                for mut monitor in monitors {
+                    s.spawn(move || monitor.capabilities());
+                }
+            }
         }
     });
 }

@@ -11,7 +11,6 @@ debug = false
 rpath = false
 lto = true
 debug-assertions = false
-codegen-units = 1
 panic = 'abort'
 incremental = false
 overflow-checks = true
@@ -20,7 +19,3 @@ overflow-checks = true
 clap = { version = "4.1.8", features = ["derive"] }
 ddc = "0.2.2"
 ddc-i2c = { version = "0.2.1", features = ["i2c-linux", "with-linux-enumerate"] }
-lazy_static = "1.4.0"
-log = "0.4.17"
-pretty_env_logger = "0.4.0"
-regex = "1.6.0"
