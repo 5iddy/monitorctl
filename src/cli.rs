@@ -28,13 +28,13 @@ pub struct Cli {
 #[derive(Debug, Subcommand, Clone)]
 pub enum SubCommands {
     /// Change Brightness
-    #[clap(visible_alias = "b")]
+    #[clap(visible_alias = "b", short_flag_alias = 'b')]
     Brightness(SubCmdArgs),
     /// Change Contrast
-    #[clap(visible_alias = "c")]
+    #[clap(visible_alias = "c", short_flag_alias = 'c')]
     Contrast(SubCmdArgs),
     /// Change Volume
-    #[clap(visible_alias = "v")]
+    #[clap(visible_alias = "v", short_flag_alias = 'v')]
     Volume(SubCmdArgs),
     /// Debug Information
     Debug,

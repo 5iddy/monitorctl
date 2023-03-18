@@ -12,7 +12,7 @@ fn main() {
 
     thread::scope(move |s| {
         let monitors: Vec<Monitor> = I2cDeviceEnumerator::new()
-            .unwrap()
+            .expect("Failed to iterate over Monitors")
             .map(Monitor::from)
             .collect();
         let cmd = cli.command;

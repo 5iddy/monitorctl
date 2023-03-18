@@ -82,7 +82,7 @@ impl Monitor {
         }
     }
 
-    // Get the capabilities for the 
+    // Get the capabilities for the
     pub fn capabilities(&mut self) {
         let cap = self
             .handle
