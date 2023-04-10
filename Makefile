@@ -19,3 +19,6 @@ build:
 
 install:
 	cargo install --profile release --bin ${PROJECT_NAME} --path .
+
+install-local: build
+	cp target/release/monitorctl ~/.local/bin
